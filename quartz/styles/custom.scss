@@ -240,6 +240,21 @@ a {
   }
 }
 
+// The @quartz-themes/default theme package (loaded via @quartz-themes/core)
+// ships its own Obsidian-derived styling for `ul.tags > li` directly: an
+// amber fill plus a 28px "stadium" border-radius, applied to the <li>
+// wrapper independently of the <a class="tag-link"> pill styled above. The
+// <li> is a few pixels larger than the <a> sitting inside it, so that
+// rounded amber box peeks out from behind our sharp-cornered pill on every
+// tag chip — the "yellow oval" bleeding out behind the rectangle. Our own
+// pill look lives entirely on the <a>, so strip the theme's box from the
+// <li> outright rather than trying to match radii.
+ul.tags > li {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
 // ----------------------------------------------------------------------------
 // Wider page frame — Quartz's own base.scss caps `.page` at 1500px via a
 // plain class selector, which custom.scss (unlayered) normally beats without
