@@ -216,7 +216,13 @@ a {
     }
 
     &.tag-link {
-      background-color: var(--secondary);
+      // The parent .internal rule above forces its own background with
+      // !important, which otherwise wins regardless of this rule's higher
+      // specificity. Without !important here, tag pills silently fall back
+      // to --card-bg instead of amber — and in dark mode --card-bg and
+      // --brand-dark (this pill's own text color) are the same hex, so the
+      // label goes fully invisible even though the DOM text is correct.
+      background-color: var(--secondary) !important;
       color: var(--brand-dark);
       font-weight: $boldWeight;
       text-transform: uppercase;
