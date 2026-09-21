@@ -1,3 +1,503 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// ============================================================================
+// Neobrutalist skin — matched to the neobrutalism.dev / shadcn-neobrutalism
+// reference: small rounded corners (not sharp), tight black offset shadows
+// (not chunky), cream cards on a mauve canvas, amber accent used only as a
+// fill (never as isolated text — it fails contrast on light backgrounds).
+// This file is emitted outside any @layer, so it always wins over base.scss
+// and over the ported-Obsidian theme layer from @quartz-themes/core.
+// ============================================================================
+
+:root {
+  --light: #f6f4e0; // Cream (palette)
+  --lightgray: #a1887f; // Mauve (palette)
+  --gray: #8a6f62; // derived: mid-tone between mauve and dark-brown
+  --darkgray: #4a2e26; // derived: body text
+  --dark: #3e2723; // Dark-brown (palette): headings + dark fill
+  --secondary: #ffb300; // Amber (palette): fill only, never isolated text
+  --tertiary: #ffc947; // derived: lightened amber for hover
+  --highlight: rgba(255, 179, 0, 0.18);
+  --textHighlight: #ffb30088;
+  --quartz-text-highlight: var(--textHighlight);
+
+  --ink: #000000; // Black (palette): all borders + shadows
+  --canvas: var(--lightgray); // page backdrop
+  --card-bg: var(--light); // raised surfaces
+
+  --background-primary: var(--card-bg);
+  --background-secondary: var(--canvas);
+  --text-normal: var(--darkgray);
+  --text-muted: var(--gray);
+  --interactive-accent: var(--secondary);
+  --interactive-accent-hover: var(--tertiary);
+  --nav-item-background-hover: var(--card-bg);
+  --tag-background: var(--secondary);
+  --tag-color: var(--dark);
+  --icon-color: var(--darkgray);
+  --quartz-icon-color: var(--darkgray);
+  --link-color: var(--dark);
+  --divider-color: var(--ink);
+}
+
+:root[saved-theme="dark"] {
+  --light: #211512; // derived: near-black brown canvas
+  --lightgray: #3e2723; // reused: Dark-brown (palette) as card fill
+  --gray: #8a6f62;
+  --darkgray: #ddd0bc; // derived: muted cream body text
+  --dark: #f6f4e0; // reused: Cream (palette) as heading ink
+  --secondary: #ffb300;
+  --tertiary: #ffc947;
+  --highlight: rgba(255, 179, 0, 0.22);
+  --textHighlight: #ffb30055;
+  --quartz-text-highlight: var(--textHighlight);
+
+  --ink: #f6f4e0; // black borders vanish on a dark canvas — flip to cream
+  --canvas: var(--light);
+  --card-bg: var(--lightgray);
+
+  --background-primary: var(--card-bg);
+  --background-secondary: var(--canvas);
+  --text-normal: var(--darkgray);
+  --text-muted: var(--gray);
+  --interactive-accent: var(--secondary);
+  --interactive-accent-hover: var(--tertiary);
+  --nav-item-background-hover: var(--card-bg);
+  --tag-background: var(--secondary);
+  --tag-color: var(--dark);
+  --icon-color: var(--darkgray);
+  --quartz-icon-color: var(--darkgray);
+  --link-color: var(--dark);
+  --divider-color: var(--ink);
+}
+
+:root {
+  // Mode-invariant: always paired with amber (fill or text). --dark flips
+  // per mode for heading legibility, which would break that pairing's
+  // contrast if reused here (cream+amber is as weak as amber+cream, ~1.6:1).
+  --brand-dark: #3e2723;
+}
+
+// Verified against the reference Figma file's own variable defs (Button,
+// Card, Badge, Alert, Accordion, Input, Checkbox, Switch primitives): every
+// component uses the SAME border/radius/shadow — this kit doesn't scale
+// those with element size, so we don't either.
+:root {
+  --radius: 5px;
+  --brutal-border: 2px;
+  --brutal-shadow: 4px 4px 0 0 var(--ink);
+  --brutal-press: translate(4px, 4px);
+}
+
+html,
+body {
+  background-color: var(--canvas);
+}
+
+::selection {
+  background: var(--secondary);
+  color: var(--dark);
+}
+
+// A press/click interaction: shadow sits offset at rest, and the element
+// sinks flush into it on hover — the defining neobrutalism affordance.
+@mixin brutal-press($shadow: var(--brutal-shadow), $press: var(--brutal-press)) {
+  box-shadow: $shadow;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+
+  &:hover {
+    transform: $press;
+    box-shadow: 0 0 0 0 var(--ink);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Typography
+// ----------------------------------------------------------------------------
+
+// Only weights 500 and 700 are loaded for --bodyFont (see quartz.config.yaml)
+// — the browser's implicit 400 "normal" has no matching @font-face and would
+// silently fall back off DM Sans, so body text is pinned to the Figma "sm"
+// token's weight (Medium/500) explicitly.
+body {
+  font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  // Figma's Heading Font Weight token is Bold (700) — DM Sans doesn't load 900.
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.page article > h1,
+h1.article-title {
+  font-size: 2.75rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  margin-left: -0.6rem;
+  background-color: var(--secondary);
+  color: var(--brand-dark);
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--brutal-shadow);
+}
+
+h2 {
+  font-size: 1.8rem;
+  border-bottom: var(--brutal-border) solid var(--ink);
+  padding-bottom: 0.2rem;
+  width: fit-content;
+}
+
+h3 {
+  font-size: 1.35rem;
+}
+
+// ----------------------------------------------------------------------------
+// Site masthead (sidebar logo) — dark fill + amber label, mirrors the
+// reference's "dark button" pairing
+// ----------------------------------------------------------------------------
+
+h2.page-title {
+  display: inline-block;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.5rem 0.5rem 0;
+  background-color: var(--brand-dark);
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--brutal-shadow);
+
+  & > a {
+    color: var(--secondary);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Body links — the base theme colors all links with --secondary (amber),
+// which fails contrast as text on light surfaces. Use --dark for legible
+// inline links instead; amber is reserved for filled chips/buttons.
+// ----------------------------------------------------------------------------
+
+a:not(.internal) {
+  color: var(--dark);
+
+  &:hover {
+    color: var(--secondary);
+  }
+}
+
+a {
+  &.internal {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    border: var(--brutal-border) solid var(--ink);
+    border-radius: var(--radius);
+    background-color: var(--card-bg) !important;
+    color: var(--dark);
+    @include brutal-press();
+
+    &:has(> img) {
+      border: none;
+      box-shadow: none;
+    }
+
+    &.tag-link {
+      background-color: var(--secondary);
+      color: var(--brand-dark);
+      font-weight: $boldWeight;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      letter-spacing: 0.02em;
+
+      &::before {
+        color: var(--brand-dark);
+      }
+
+      &:hover {
+        color: var(--brand-dark);
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Wider page frame — Quartz's own base.scss caps `.page` at 1500px via a
+// plain class selector, which custom.scss (unlayered) normally beats without
+// a fight. But @quartz-themes/core injects a SEPARATE unlayered stylesheet
+// (the same "ported Obsidian theme" file already fought for colors — see
+// header comment) with its own responsive layout, anchored to
+// `div#quartz-root.page div#quartz-body { max-width: min(100%, 1500px) }`.
+// That's an ID selector: it outranks a plain `.page{...}` override by
+// specificity alone, regardless of cascade order or which file is unlayered.
+// !important is the only reliable way to beat it here.
+// ----------------------------------------------------------------------------
+
+@media all and ($desktop) {
+  div#quartz-root.page {
+    max-width: min(1800px, 96vw) !important;
+  }
+
+  div#quartz-root.page div#quartz-body {
+    width: min(100%, 1800px) !important;
+    max-width: min(100%, 1800px) !important;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Page frame — the article sits on a raised card, not directly on the canvas
+// ----------------------------------------------------------------------------
+
+.page > #quartz-body {
+  & .center {
+    background-color: var(--card-bg);
+    border: var(--brutal-border) solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--brutal-shadow);
+    padding: 2rem 2.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+
+    @media all and ($mobile) {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+
+  & footer {
+    border-top: var(--brutal-border) solid var(--ink);
+    padding-top: 1rem;
+    margin-top: 0;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Blockquotes
+// ----------------------------------------------------------------------------
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: var(--brutal-border) solid var(--ink);
+  border-left-width: 6px;
+  border-radius: var(--radius);
+  background-color: var(--canvas);
+  box-shadow: var(--brutal-shadow);
+}
+
+// ----------------------------------------------------------------------------
+// Code
+// ----------------------------------------------------------------------------
+
+code {
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background: var(--canvas);
+}
+
+figure[data-rehype-pretty-code-figure] {
+  & > [data-rehype-pretty-code-title] {
+    border: var(--brutal-border) solid var(--ink);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    font-weight: $semiBoldWeight;
+    background-color: var(--canvas);
+  }
+
+  & > pre {
+    margin-top: 0;
+  }
+}
+
+pre {
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--brutal-shadow);
+
+  // Base Quartz's <code> is display:grid with overflow-x:auto — long lines
+  // (e.g. wide PowerShell comment banners) get clipped/scrolled instead of
+  // visible. Wrap instead: min-width:0 on the grid stops it blowing out to
+  // fit unwrapped content, so pre-wrap can actually take. Syntax-highlighted
+  // blocks split each line into a `[data-line]` child; plain fenced blocks
+  // (no language recognized) are a single raw text node directly in <code>
+  // — cover both.
+  & > code {
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    & > [data-line] {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Tables
+// ----------------------------------------------------------------------------
+
+.table-container {
+  & > table {
+    border: var(--brutal-border) solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--brutal-shadow);
+    background-color: var(--card-bg);
+    overflow: hidden;
+  }
+}
+
+th {
+  background-color: var(--brand-dark);
+  color: var(--secondary);
+  border-bottom: none;
+}
+
+tr {
+  border-bottom: 1.5px solid var(--ink);
+}
+
+// ----------------------------------------------------------------------------
+// Images, hr, checkboxes
+// ----------------------------------------------------------------------------
+
+img {
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: var(--radius);
+}
+
+hr {
+  height: var(--brutal-border);
+  background-color: var(--ink);
+}
+
+input[type="checkbox"] {
+  // Reference Checkbox primitive is 16px, square (no border-radius) — the
+  // only unrounded control in the kit.
+  width: 16px;
+  height: 16px;
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: 0;
+  background-color: var(--card-bg);
+
+  &:checked {
+    border-color: var(--ink);
+    background-color: var(--secondary);
+
+    &::after {
+      border-color: var(--brand-dark);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Callouts — keep each type's accent color as the border/icon color, flatten
+// the tinted wash into a solid card with a thick border + hard shadow.
+// ----------------------------------------------------------------------------
+
+.callout {
+  border: var(--brutal-border) solid var(--color);
+  border-radius: var(--radius);
+  background-color: var(--card-bg);
+  box-shadow: var(--brutal-shadow);
+  padding: 0.25rem 1.25rem;
+
+  .callout-icon,
+  .fold-callout-icon {
+    background-color: var(--color);
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Sidebars / panels (explorer, backlinks, graph, TOC) — boxed poster panels
+// ----------------------------------------------------------------------------
+
+@media all and ($desktop) {
+  .sidebar.left {
+    border-right: var(--brutal-border) solid var(--ink);
+  }
+
+  .sidebar.right {
+    border-left: var(--brutal-border) solid var(--ink);
+  }
+}
+
+@media all and not ($mobile) {
+  .sidebar {
+    & > .explorer,
+    & > .toc,
+    & > .backlinks,
+    & > .graph {
+      border: var(--brutal-border) solid var(--ink);
+      border-radius: var(--radius);
+      background-color: var(--card-bg);
+      padding: 1rem;
+      box-shadow: var(--brutal-shadow);
+    }
+  }
+}
+
+.explorer .folder-container:hover,
+ul.explorer-ul li a:not(.folder-title):hover,
+ul.explorer-ul li a.active {
+  background-color: var(--secondary) !important;
+  color: var(--brand-dark) !important;
+  border-radius: 4px;
+}
+
+// ----------------------------------------------------------------------------
+// Buttons / icon controls (search, darkmode, readermode, graph toggle)
+// ----------------------------------------------------------------------------
+
+button.readermode,
+button.darkmode,
+button.global-graph-icon,
+.search > .search-button {
+  border: var(--brutal-border) solid var(--ink);
+  border-radius: var(--radius);
+  background-color: var(--card-bg);
+  padding: 0.4rem;
+  @include brutal-press();
+
+  &:hover {
+    background-color: var(--secondary);
+    --quartz-icon-color: var(--brand-dark);
+  }
+}
+
+.search {
+  & > .search-container {
+    & > .search-space {
+      border: var(--brutal-border) solid var(--ink);
+      border-radius: var(--radius);
+      box-shadow: var(--brutal-shadow);
+      background-color: var(--card-bg);
+
+      & > input {
+        background-color: var(--card-bg);
+        font-weight: $semiBoldWeight;
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Navigation progress bar
+// ----------------------------------------------------------------------------
+
+.navigation-progress {
+  height: 5px;
+  background: var(--secondary);
+}

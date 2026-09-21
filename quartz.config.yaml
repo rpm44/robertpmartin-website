@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
+  pageTitle: Robert P. Martin
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
@@ -19,30 +19,34 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Schibsted Grotesk
-      body: Source Sans Pro
+      header:
+        name: DM Sans
+        weights: [700]
+      body:
+        name: DM Sans
+        weights: [500, 700]
       code: IBM Plex Mono
     colors:
       lightMode:
-        light: "#faf8f8"
-        lightgray: "#e5e5e5"
-        gray: "#b8b8b8"
-        darkgray: "#4e4e4e"
-        dark: "#2b2b2b"
-        secondary: "#284b63"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#fff23688"
+        light: "#F6F4E0" # Cream (palette) — card/surface fill
+        lightgray: "#A1887F" # Mauve (palette) — page canvas
+        gray: "#8A6F62" # derived: muted mid-tone between mauve and dark-brown
+        darkgray: "#4A2E26" # derived: body text (lightened Dark-brown)
+        dark: "#3E2723" # Dark-brown (palette) — headings + dark button/badge fill
+        secondary: "#FFB300" # Amber (palette) — accent fill, never used as isolated text
+        tertiary: "#FFC947" # derived: lightened Amber for hover states
+        highlight: rgba(255, 179, 0, 0.18) # derived from Amber
+        textHighlight: "#FFB30088" # derived from Amber
       darkMode:
-        light: "#161618"
-        lightgray: "#393639"
-        gray: "#646464"
-        darkgray: "#d4d4d4"
-        dark: "#ebebec"
-        secondary: "#7b97aa"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#b3aa0288"
+        light: "#211512" # derived: near-black brown canvas
+        lightgray: "#3E2723" # reused: Dark-brown (palette) as card/surface fill
+        gray: "#8A6F62" # derived: same muted mid-tone
+        darkgray: "#DDD0BC" # derived: muted cream body text
+        dark: "#F6F4E0" # reused: Cream (palette) as brightest heading ink
+        secondary: "#FFB300" # Amber (palette)
+        tertiary: "#FFC947" # derived: lightened Amber
+        highlight: rgba(255, 179, 0, 0.22) # derived from Amber
+        textHighlight: "#FFB30055" # derived from Amber
 plugins:
   - source: "@quartz-community/created-modified-date"
     enabled: true
