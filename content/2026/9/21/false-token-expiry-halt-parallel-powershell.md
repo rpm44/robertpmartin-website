@@ -9,7 +9,13 @@ tags:
   - microsoft-teams
 ---
 
-I run a monthly audit that checks Teams Voice Isolation enrollment against policy eligibility for our ~27,500 Teams-licensed users. It calls an internal REST endpoint under a short-lived bearer token, spread across 50 concurrent PowerShell runspace threads to make the per-user calls finish in a reasonable time. This post is about a bug that made the script quit early, convinced its own authentication had died when it hadn't, and the statistical fix that actually held up.
+## Why this script had to exist at all
+
+A lot of Teams administrative policy is still built on the old Skype for Business framework, and large parts of it were never given Graph API coverage. It's a well-known gap in the M365 admin community, not just something I ran into. Tony Redmond made the same point directly in ["Sad State of Microsoft Graph And Other Microsoft 365 APIs"](https://office365itpros.com/2026/03/18/microsoft-graph-issues/): Teams policies "don't have Graph APIs," and admins are routinely pushed toward undocumented interfaces to get data the supported surface doesn't expose. Practical365 has run multiple posts on the same underlying problem for plain Teams policy assignment reporting, because the native tooling still doesn't give you that view at scale either.
+
+Voice Isolation enrollment-versus-eligibility is one of those gaps. There's no supported, tenant-wide API for it, so anyone who needs that number has to build their own path to it. That's the position I was in: a monthly audit comparing Voice Isolation enrollment against policy eligibility for our ~27,500 Teams-licensed users, hitting an endpoint outside the supported public API surface under a short-lived bearer token, spread across 50 concurrent PowerShell runspace threads to make the per-user calls finish in a reasonable time. This post is about a bug that made that script quit early, convinced its own authentication had died when it hadn't, and the statistical fix that actually held up.
+
+Worth flagging up front: Microsoft started rolling out an official Voice and Face Enrollment dashboard in the Teams Admin Center in March–April 2026, right around when this script was in production. That's a good sign the gap is closing. What's public about it so far reads as single-tenant, point-in-time visibility rather than confirmed bulk export or trend data, so a script like this may still cover ground the native tool doesn't, but it's worth checking the current state of that dashboard before assuming this kind of workaround is still necessary.
 
 ## The symptom: halting on a token that hadn't expired
 
