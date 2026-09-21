@@ -3,6 +3,10 @@ title: "Script to Query Multiple Recipient Types in Microsoft 365"
 date: Wed, 23 Sep 2020 00:01:20 +0000
 slug: 2020/9/22/script-to-query-multiple-recipient-types-in-microsoft-365
 status: publish
+tags:
+  - powershell
+  - microsoft-365
+  - exchange-online
 ---
 
 Below is a script that I wrote to help me find all types of mail enabled items in Microsoft 365. It also provides a list of Users who have access to that mail asset at what rights they currently have.

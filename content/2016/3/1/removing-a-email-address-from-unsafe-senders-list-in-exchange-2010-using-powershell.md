@@ -3,6 +3,9 @@ title: "Removing a Email Address from Unsafe Senders List in Exchange 2010 Using
 date: Wed, 02 Mar 2016 05:40:02 +0000
 slug: 2016/3/1/removing-a-email-address-from-unsafe-senders-list-in-exchange-2010-using-powershell
 status: publish
+tags:
+  - powershell
+  - exchange-server
 ---
 
 Today I had to remove an errant email address from a user's unsafe sender list.  I found out that using Powershell and Exchange Shell for Exchange 2010 you can add and remove email addresses from the already current list without removing everything else.

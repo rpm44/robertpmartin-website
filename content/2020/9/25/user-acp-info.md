@@ -3,6 +3,9 @@ title: "User ACP Info"
 date: Sat, 03 Oct 2020 16:06:54 +0000
 slug: 2020/9/25/an-easy-way-to-add-senders-to-a-individuals-trusted-senders-list-kb3cl-55d2k
 status: publish
+tags:
+  - powershell
+  - microsoft-365
 ---
 
 This script collects the ACP (Audio Conference Provider) information for your users in your tenant so you can find out what provider they are using. This requires you to already be logged into Skype for Business within PowerShell. The command I use for this is:
