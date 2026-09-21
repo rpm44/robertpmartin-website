@@ -3,6 +3,10 @@ title: "Add Domain to & Display Trusted Senders List"
 date: Sat, 03 Oct 2020 15:54:09 +0000
 slug: 2020/9/25/an-easy-way-to-add-senders-to-a-individuals-trusted-senders-list-kb3cl-d722n
 status: publish
+tags:
+  - powershell
+  - microsoft-365
+  - exchange-online
 ---
 
 There are two separate versions of this script. I have created one for individuals up to a small list of users, and a second version that I use for entire domain names of people. The first script is for individuals or small groups. It also produces an output that shows the end result of the script for each of the users affected.

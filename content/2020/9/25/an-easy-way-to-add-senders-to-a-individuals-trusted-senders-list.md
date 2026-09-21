@@ -3,6 +3,10 @@ title: "Add Trusted Senders & Display Trusted Senders List"
 date: Fri, 25 Sep 2020 16:42:43 +0000
 slug: 2020/9/25/an-easy-way-to-add-senders-to-a-individuals-trusted-senders-list
 status: publish
+tags:
+  - powershell
+  - microsoft-365
+  - exchange-online
 ---
 
 I created this script to allow our service desk an easier time to help individuals who could not or would not manage their own quarantine in Office365. The script does the following things; It allows the user of the script to input multiple recipient and sender addresses, takes those addresses, releases any email that matches the sender and recipient address that were entered. While it releases those messages it also tags those messages as False Positive for Microsoft and releases to all recipients in the email.
